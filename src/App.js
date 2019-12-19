@@ -27,6 +27,10 @@ const Clue = ({ clueId }) => (
     <header className="App-header">
       <img src={logo} className="App-logo" alt="logo" />
       <h1>Clue: {clueId}</h1>
+      <p>
+        Go to the toilet and let it rain. Wait, no, not like that you dirty
+        boys!
+      </p>
     </header>
   </div>
 );
