@@ -31,11 +31,11 @@ const Home = () => {
   const [result, setResult] = useState(null);
   const [clue, setClue] = useState(" ");
 
-  const myCipher = cipher("mySecretThingsWotIWroted");
+  const myCipher = cipher(key);
   const scrambledClue = myCipher(clue);
   const clueUrl = baseClueUrl + scrambledClue;
 
-  const myDecipher = decipher("mySecretThingsWotIWroted");
+  const myDecipher = decipher(key);
   const unscrambledClue = myDecipher(scrambledClue);
 
   const handleScan = data => {
@@ -54,7 +54,7 @@ const Home = () => {
 
   return (
     <div>
-      <h1>QR Treasure Hunt</h1>
+      <HEADER>QR Treasure Hunt</HEADER>
 
       <p>clue: {clue}</p>
       <p>scrambledClue: {scrambledClue}</p>
@@ -109,7 +109,7 @@ const cipher = salt => {
 
 const decipher = salt => {
   const textToChars = text => text.split("").map(c => c.charCodeAt(0));
-  const saltChars = textToChars(salt);
+  //const saltChars = textToChars(salt);
   const applySaltToChar = code =>
     textToChars(salt).reduce((a, b) => a ^ b, code);
   return encoded =>
@@ -120,3 +120,7 @@ const decipher = salt => {
       .map(charCode => String.fromCharCode(charCode))
       .join("");
 };
+
+const HEADER = styled.h1`
+  text-align: center;
+`;
