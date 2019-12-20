@@ -12,14 +12,14 @@ export const Home = () => {
       </p>
 
       <nav>
-        <url>
+        <ul>
           <li>
             Set up a game: <Link to="/clueMaker">Clue Maker</Link>
           </li>
           <li>
             Start a game: <Link to="/qrScanner">QR Scanner</Link>
           </li>
-        </url>
+        </ul>
       </nav>
     </div>
   );

@@ -9,33 +9,84 @@ import "@material/line-ripple/dist/mdc.line-ripple.css";
 import { TextField } from "@rmwc/textfield";
 //
 import useLocalStorage from "../comps/UseLocalStorageHook";
-import { cipher, decipher, key, baseClueUrl } from "../comps/ClueCipher";
+import { cipher, key, baseClueUrl } from "../comps/ClueCipher";
+
+const defaultCluesData = {
+  1: {
+    number: 1,
+    text: "Behind a small door in the place where beasts are singed.",
+    message: "Give this to the treasure hunter."
+  }
+};
 
 export const ClueMaker = () => {
-  const [clue, setClue] = useLocalStorage("clue1", " ");
+  const [cluesStr, setClues] = useLocalStorage(
+    "clues",
+    JSON.stringify(defaultCluesData)
+  );
 
-  const myCipher = cipher(key);
-  const scrambledClue = myCipher(clue);
-  const clueUrl = baseClueUrl + scrambledClue;
+  const clues = JSON.parse(cluesStr);
+  const clueKeys = Object.keys(clues);
 
-  const myDecipher = decipher(key);
-  const unscrambledClue = myDecipher(scrambledClue);
-
-  const onClueTextChange = e => {
-    setClue(e.target.value);
+  const onClueChange = newClue => {
+    const newClues = { ...clues, [newClue.number]: newClue };
+    const newCluesStr = JSON.stringify(newClues);
+    setClues(newCluesStr);
   };
 
   return (
     <CLUE_MAKER>
       <HEADER>QR Treasure Hunt</HEADER>
       <Link to="/">HOME</Link>
-      <p>clue: {clue}</p>
-      <p>scrambledClue: {scrambledClue}</p>
-      <p>unscrambledClue: {unscrambledClue}</p>
-      <p>clueUrl: {clueUrl}</p>
-      <TextField outlined value={clue} onChange={onClueTextChange} />
-      <QRCode size={300} value={clueUrl} />
+
+      {clueKeys.map(key => {
+        const clue = clues[key];
+        return (
+          <ClueInput key={clue.number} clue={clue} onChange={onClueChange} />
+        );
+      })}
     </CLUE_MAKER>
+  );
+};
+
+const ClueInput = ({ clue, onChange }) => {
+  const onClueChange = e => {
+    e.preventDefault();
+    const newClue = { ...clue, text: e.target.value };
+    onChange(newClue);
+  };
+
+  return (
+    <CLUE_INPUT>
+      <TextField
+        value={clue.text}
+        onChange={onClueChange}
+        textarea
+        outlined
+        fullwidth
+        label={`Clue: ${clue.number}`}
+        rows={1}
+      />
+
+      <ClueQRCode clue={clue} />
+    </CLUE_INPUT>
+  );
+};
+
+const ClueQRCode = ({ clue }) => {
+  if (!clue.text) {
+    return <div>[NEED SOME TEST FOR QR CODE]</div>;
+  }
+
+  const myCipher = cipher(key);
+  const scrambledClue = myCipher(clue.text);
+  const clueUrl = baseClueUrl + scrambledClue;
+
+  return (
+    <CLUE_QR_CODE>
+      <QRCode size={300} value={clueUrl} />
+      <a href={clueUrl}>{clueUrl}</a>
+    </CLUE_QR_CODE>
   );
 };
 
@@ -46,4 +97,12 @@ const HEADER = styled.h1`
 const CLUE_MAKER = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const CLUE_INPUT = styled.div`
+  padding: 20px 0;
+`;
+
+const CLUE_QR_CODE = styled.div`
+  padding: 20px 0;
 `;
