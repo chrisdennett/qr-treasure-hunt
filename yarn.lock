@@ -1182,12 +1182,34 @@
   dependencies:
     tslib "^1.9.3"
 
+"@material/button@^3.1.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@material/button/-/button-3.2.0.tgz#859d9ce164d6ee5925ac0fb04af57ea7d9295c6e"
+  integrity sha512-VEASy3Dtc7BCo8/cuUIp6w0+/l4U1myGZffK5GeFVInP/erStSQOmYXT7jGXkZpUglRzWOpVvEpc6nsvhMqGbw==
+  dependencies:
+    "@material/elevation" "^3.1.0"
+    "@material/feature-targeting" "^3.1.0"
+    "@material/ripple" "^3.2.0"
+    "@material/rtl" "^3.2.0"
+    "@material/shape" "^3.1.0"
+    "@material/theme" "^3.1.0"
+    "@material/typography" "^3.1.0"
+
 "@material/dom@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@material/dom/-/dom-3.1.0.tgz#1e58cad0cd5e1d9d6f6cb07422e327ad34a9d405"
   integrity sha512-RtBLSkrBjMfHwknaGBifAIC8cBWF9pXjz2IYqfI2braB6SfQI4vhdJviwyiA5BmA/psn3cKpBUZbHI0ym0O0SQ==
   dependencies:
     tslib "^1.9.3"
+
+"@material/elevation@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@material/elevation/-/elevation-3.1.0.tgz#2fcbde47653cc115519a39acc2d04b34e4cff12b"
+  integrity sha512-e45LqiG6LfbR1M52YkSLA7pQPeYJOuOVzLp27xy2072TnLuJexMxhEaG4O1novEIjsTtMjqfrfJ/koODU5vEew==
+  dependencies:
+    "@material/animation" "^3.1.0"
+    "@material/feature-targeting" "^3.1.0"
+    "@material/theme" "^3.1.0"
 
 "@material/feature-targeting@^3.1.0":
   version "3.1.0"
@@ -1319,6 +1341,18 @@
     focus-trap "^5.0.0"
     hyperform "^0.9.9"
     mutation-observer "^1.0.3"
+
+"@rmwc/button@^5.7.2":
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/@rmwc/button/-/button-5.7.2.tgz#1c1ef2669f6ab48f9cd1111c986dd37227fe98f5"
+  integrity sha512-Kerzok5q4wxB8Kj4BgckG54r0/nruq+eUK4+rujMiBRIUPi1nw47OZCab8/c+T+bsyVTnBOcXW+xwcmPG6dCXQ==
+  dependencies:
+    "@material/button" "^3.1.0"
+    "@rmwc/base" "^5.7.2"
+    "@rmwc/icon" "^5.7.2"
+    "@rmwc/provider" "^5.7.2"
+    "@rmwc/ripple" "^5.7.2"
+    "@rmwc/types" "^5.6.0"
 
 "@rmwc/floating-label@^5.7.2":
   version "5.7.2"
