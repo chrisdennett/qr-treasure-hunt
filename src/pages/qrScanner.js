@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import "@material/button/dist/mdc.button.css";
+import { Button } from "@rmwc/button";
 import styled from "styled-components";
 import QrReader from "react-qr-reader";
 
@@ -19,13 +21,13 @@ export const QRScanner = () => {
       <h1>QR Treasure Hunt</h1>
 
       <QR_READER_HOLDER>
+        {result && <a href={result}>SEE CLUE</a>}
         <QrReader
           delay={300}
           onError={handleError}
           onScan={handleScan}
           style={{ width: "100%" }}
         />
-        <p>{result}</p>
       </QR_READER_HOLDER>
     </QR_SCANNER>
   );
@@ -45,4 +47,15 @@ const QR_SCANNER = styled.div`
 const QR_READER_HOLDER = styled.div`
   max-width: 400px;
   min-width: 400px;
+  a {
+    padding: 20px;
+    font-size: 24px;
+    background: purple;
+    color: white;
+    margin: 15px 0;
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 10px;
+  }
 `;
