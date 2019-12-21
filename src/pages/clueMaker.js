@@ -9,9 +9,16 @@ import "@material/line-ripple/dist/mdc.line-ripple.css";
 import { TextField } from "@rmwc/textfield";
 import "@material/button/dist/mdc.button.css";
 import { Button } from "@rmwc/button";
+import "@material/tab-bar/dist/mdc.tab-bar.css";
+import "@material/tab/dist/mdc.tab.css";
+import "@material/tab-scroller/dist/mdc.tab-scroller.css";
+import "@material/tab-indicator/dist/mdc.tab-indicator.css";
+import { TabBar, Tab } from "@rmwc/tabs";
 //
 import useLocalStorage from "../comps/UseLocalStorageHook";
 import { cipher, key, baseClueUrl } from "../comps/ClueCipher";
+//
+import { CluesToPrint } from "../comps/CluesToPrint";
 
 const defaultCluesData = {
   1: {
@@ -23,6 +30,7 @@ const defaultCluesData = {
 };
 
 export const ClueMaker = () => {
+  const [activeTab, setActiveTab] = React.useState(1);
   const [cluesStr, setClues] = useLocalStorage(
     "clues",
     JSON.stringify(defaultCluesData)
@@ -54,18 +62,35 @@ export const ClueMaker = () => {
 
   return (
     <CLUE_MAKER>
-      <HEADER>QR Treasure Hunt</HEADER>
-      <Link to="/">HOME</Link>
+      <div className={"do-not-print"}>
+        <HEADER>QR Treasure Hunt</HEADER>
+        <Link to="/">HOME</Link>
+        <TabBar
+          activeTabIndex={activeTab}
+          onActivate={e => setActiveTab(e.detail.index)}
+        >
+          <Tab>Make Clues</Tab>
+          <Tab>Print Clues</Tab>
+        </TabBar>
 
-      {clueKeys.map(key => {
-        const clue = clues[key];
-        return (
-          <ClueInput key={clue.number} clue={clue} onChange={onClueChange} />
-        );
-      })}
-      <Button label="Add Clue" raised onClick={onAddClueClick} />
-      <hr />
-      <CluesToPrint clues={clues} />
+        {activeTab === 0 && (
+          <div>
+            {clueKeys.map(key => {
+              const clue = clues[key];
+              return (
+                <ClueInput
+                  key={clue.number}
+                  clue={clue}
+                  onChange={onClueChange}
+                />
+              );
+            })}
+            <Button label="Add Clue" raised onClick={onAddClueClick} />
+          </div>
+        )}
+      </div>
+
+      {activeTab === 1 && <CluesToPrint clues={clues} />}
     </CLUE_MAKER>
   );
 };
@@ -111,50 +136,6 @@ const ClueInput = ({ clue, onChange }) => {
   );
 };
 
-const ClueQRCode = ({ clue }) => {
-  if (!clue.text) {
-    return <div>[NEED SOME TEST FOR QR CODE]</div>;
-  }
-
-  const myCipher = cipher(key);
-  const scrambledClue = myCipher(clue.text);
-  const clueUrl = baseClueUrl + scrambledClue;
-
-  return (
-    <CLUE_QR_CODE>
-      <QRCode size={300} value={clueUrl} />
-      <a href={clueUrl}>{clueUrl}</a>
-    </CLUE_QR_CODE>
-  );
-};
-
-const CluesToPrint = ({ clues }) => {
-  const clueKeys = Object.keys(clues);
-  return (
-    <div>
-      <h2>CLUES TO PRINT</h2>
-      <CLUES_TO_PRINT>
-        {clueKeys.map(key => {
-          const clue = clues[key];
-          const { number } = clue;
-          const message =
-            number === 1
-              ? "Give this to the treasure hunter."
-              : clues[number - 1].answer;
-
-          return (
-            <CLUE_FOR_PRINTING>
-              <h3>CLUE: {clue.number}</h3>
-              <p>Clue master: {message}</p>
-              <ClueQRCode clue={clue} />
-            </CLUE_FOR_PRINTING>
-          );
-        })}
-      </CLUES_TO_PRINT>
-    </div>
-  );
-};
-
 const HEADER = styled.h1`
   text-align: center;
 `;
@@ -165,25 +146,5 @@ const CLUE_MAKER = styled.div`
 `;
 
 const CLUE_INPUT = styled.div`
-  padding: 20px 0;
-`;
-
-const CLUE_QR_CODE = styled.div`
-  padding: 20px 0;
-  display: flex;
-  flex-direction: column;
-  max-width: 300px;
-  word-break: break-all;
-`;
-
-const CLUES_TO_PRINT = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
-const CLUE_FOR_PRINTING = styled.div`
-  border: 1px solid black;
-  margin: 10px;
-  padding: 20px;
-  max-width: 320px;
+  padding: 5px 0;
 `;
