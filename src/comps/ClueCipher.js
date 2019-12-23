@@ -1,5 +1,6 @@
 export const key = "real secret keys should be long and random";
-export const baseClueUrl = "https://qr-treasure-hunt.netlify.com/clue/";
+export const baseClueUrl = "https://qrtreasurehunt.artfly.io/clue/";
+// export const baseClueUrl = "https://qr-treasure-hunt.netlify.com/clue/";
 // export const localBaseClueUrl = "http://localhost:3000/clueMaker/clue/";
 
 export const cipher = salt => {
