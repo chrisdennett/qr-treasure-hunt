@@ -16,24 +16,15 @@ import "@material/tab-indicator/dist/mdc.tab-indicator.css";
 import { TabBar, Tab } from "@rmwc/tabs";
 //
 import useLocalStorage from "../comps/UseLocalStorageHook";
-import { cipher, key, baseClueUrl } from "../comps/ClueCipher";
+import { defaultClueSet } from "../comps/defaultClueSet";
 //
 import { CluesToPrint } from "../comps/CluesToPrint";
 
-const defaultCluesData = {
-  1: {
-    number: 1,
-    text: "Behind a small door in the place where beasts are singed.",
-    answer: "kitchen cupboard",
-    message: "Give this to the treasure hunter."
-  }
-};
-
 export const ClueMaker = () => {
-  const [activeTab, setActiveTab] = React.useState(1);
+  const [activeTab, setActiveTab] = React.useState(0);
   const [cluesStr, setClues] = useLocalStorage(
     "clues",
-    JSON.stringify(defaultCluesData)
+    JSON.stringify(defaultClueSet)
   );
 
   const clues = JSON.parse(cluesStr);
@@ -60,6 +51,30 @@ export const ClueMaker = () => {
     setClues(newCluesStr);
   };
 
+  const onDeleteClueClick = (e, clue) => {
+    e.preventDefault();
+    // create a copy of clues to work on
+    const newClues = { ...clues };
+    // delete current clue
+    const deleteClueNumber = clue.number;
+    const totalClues = Object.keys(newClues).length;
+    //  all numbers and keys from this number up.
+    let updateNumber = deleteClueNumber + 1;
+
+    while (updateNumber <= totalClues) {
+      const clueToUpdate = { ...newClues[updateNumber] };
+      const newClueNumber = updateNumber - 1;
+      clueToUpdate.number = newClueNumber;
+      newClues[newClueNumber] = clueToUpdate;
+      updateNumber++;
+    }
+
+    // now delete the last one
+    delete newClues[totalClues];
+
+    setClues(JSON.stringify(newClues));
+  };
+
   return (
     <CLUE_MAKER>
       <div className={"do-not-print"}>
@@ -78,11 +93,15 @@ export const ClueMaker = () => {
             {clueKeys.map(key => {
               const clue = clues[key];
               return (
-                <ClueInput
-                  key={clue.number}
-                  clue={clue}
-                  onChange={onClueChange}
-                />
+                <CLUE_INPUT_HOLDER key={clue.number}>
+                  <ClueInput clue={clue} onChange={onClueChange} />
+                  <Button
+                    label="Delete Clue"
+                    raised
+                    danger
+                    onClick={e => onDeleteClueClick(e, clue)}
+                  />
+                </CLUE_INPUT_HOLDER>
               );
             })}
             <Button label="Add Clue" raised onClick={onAddClueClick} />
@@ -119,7 +138,7 @@ const ClueInput = ({ clue, onChange }) => {
         outlined
         fullwidth
         label={`Clue: ${clue.number}`}
-        rows={1}
+        rows={3}
       />
 
       <TextField
@@ -130,7 +149,7 @@ const ClueInput = ({ clue, onChange }) => {
         outlined
         fullwidth
         label={`Clue: ${clue.number} Answer`}
-        rows={1}
+        rows={3}
       />
     </CLUE_INPUT>
   );
@@ -147,4 +166,14 @@ const CLUE_MAKER = styled.div`
 
 const CLUE_INPUT = styled.div`
   padding: 5px 0;
+`;
+
+const CLUE_INPUT_HOLDER = styled.div`
+  padding: 5px 0;
+  display: flex;
+  flex-direction: column;
+
+  button {
+    align-self: flex-end;
+  }
 `;
