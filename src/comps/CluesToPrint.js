@@ -66,7 +66,7 @@ const CLUE_FOR_PRINTING = styled.div`
   border: 0.5px solid black;
   margin: -0.5px;
   padding: 10px;
-  width: 230px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   /* justify-content: space-between; */
