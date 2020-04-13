@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "@reach/router";
 import styled from "styled-components";
-import QRCode from "qrcode.react";
 import "@material/textfield/dist/mdc.textfield.css";
 import "@material/floating-label/dist/mdc.floating-label.css";
 import "@material/notched-outline/dist/mdc.notched-outline.css";
@@ -14,6 +13,8 @@ import "@material/tab/dist/mdc.tab.css";
 import "@material/tab-scroller/dist/mdc.tab-scroller.css";
 import "@material/tab-indicator/dist/mdc.tab-indicator.css";
 import { TabBar, Tab } from "@rmwc/tabs";
+import { FaPrint } from "react-icons/fa";
+import { AiFillEdit } from "react-icons/ai";
 //
 import useLocalStorage from "../comps/UseLocalStorageHook";
 import { defaultClueSet } from "../comps/defaultClueSet";
@@ -30,19 +31,19 @@ export const ClueMaker = () => {
   const clues = JSON.parse(cluesStr);
   const clueKeys = Object.keys(clues);
 
-  const onClueChange = newClue => {
+  const onClueChange = (newClue) => {
     const newClues = { ...clues, [newClue.number]: newClue };
     const newCluesStr = JSON.stringify(newClues);
     setClues(newCluesStr);
   };
 
-  const onAddClueClick = e => {
+  const onAddClueClick = (e) => {
     e.preventDefault();
     const newClueNumber = clueKeys.length + 1;
     const newClue = {
       number: newClueNumber,
       text: "It's in the house!",
-      answer: "Somewhere in the house."
+      answer: "Somewhere in the house.",
     };
 
     const newClues = { ...clues, [newClueNumber]: newClue };
@@ -79,27 +80,38 @@ export const ClueMaker = () => {
     <CLUE_MAKER>
       <div className={"do-not-print"}>
         <HEADER>QR Treasure Hunt</HEADER>
-        <Link to="/">HOME</Link>
+        <StyledNav>
+          <StyledLink to="/">HOME</StyledLink>
+          <StyledLink to="/qrScanner">START GAME</StyledLink>
+        </StyledNav>
         <TabBar
           activeTabIndex={activeTab}
-          onActivate={e => setActiveTab(e.detail.index)}
+          onActivate={(e) => setActiveTab(e.detail.index)}
         >
-          <Tab>Make Clues</Tab>
-          <Tab>Print Clues</Tab>
+          <Tab style={{ borderTop: "solid 1px rgba(0,0,0,0.1)" }}>
+            <AiFillEdit /> Make Clues
+          </Tab>
+          <Tab style={{ borderTop: "solid 1px rgba(0,0,0,0.1)" }}>
+            <FaPrint /> Print Clues
+          </Tab>
         </TabBar>
 
         {activeTab === 0 && (
           <div>
-            {clueKeys.map(key => {
+            {clueKeys.map((key, index) => {
               const clue = clues[key];
               return (
                 <CLUE_INPUT_HOLDER key={clue.number}>
-                  <ClueInput clue={clue} onChange={onClueChange} />
+                  <ClueInput
+                    clue={clue}
+                    isLastClue={index === clueKeys.length - 1}
+                    onChange={onClueChange}
+                  />
                   <Button
                     label="Delete Clue"
                     raised
                     danger
-                    onClick={e => onDeleteClueClick(e, clue)}
+                    onClick={(e) => onDeleteClueClick(e, clue)}
                   />
                 </CLUE_INPUT_HOLDER>
               );
@@ -114,14 +126,14 @@ export const ClueMaker = () => {
   );
 };
 
-const ClueInput = ({ clue, onChange }) => {
-  const onClueChange = e => {
+const ClueInput = ({ clue, onChange, isLastClue }) => {
+  const onClueChange = (e) => {
     e.preventDefault();
     const newClue = { ...clue, text: e.target.value };
     onChange(newClue);
   };
 
-  const onAnswerChange = e => {
+  const onAnswerChange = (e) => {
     e.preventDefault();
     const newClue = { ...clue, answer: e.target.value };
     onChange(newClue);
@@ -129,7 +141,10 @@ const ClueInput = ({ clue, onChange }) => {
 
   return (
     <CLUE_INPUT>
-      <h2>CLUE: {clue.number}</h2>
+      <h2>
+        CLUE: {clue.number}{" "}
+        {isLastClue ? "(last clue - leads them to treasure)" : ""}
+      </h2>
 
       <TextField
         value={clue.text}
@@ -157,6 +172,7 @@ const ClueInput = ({ clue, onChange }) => {
 
 const HEADER = styled.h1`
   text-align: center;
+  margin-bottom: 0;
 `;
 
 const CLUE_MAKER = styled.div`
@@ -176,4 +192,21 @@ const CLUE_INPUT_HOLDER = styled.div`
   button {
     align-self: flex-end;
   }
+`;
+
+const StyledLink = styled(Link)`
+  margin: 5px;
+  padding: 10px 15px;
+  background: green;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+`;
+
+const StyledNav = styled.nav`
+  padding-top: 20px;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 `;
