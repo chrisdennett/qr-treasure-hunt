@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "@reach/router";
 import styled from "styled-components";
 import QRCode from "qrcode.react";
 //
@@ -11,7 +10,7 @@ export const CluesToPrint = ({ clues }) => {
     <div>
       <h2 className={"do-not-print"}>CLUES TO PRINT</h2>
       <CLUES_TO_PRINT>
-        {clueKeys.map(key => {
+        {clueKeys.map((key) => {
           const clue = clues[key];
           const { number } = clue;
           const message =

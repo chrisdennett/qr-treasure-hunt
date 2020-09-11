@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import "@material/button/dist/mdc.button.css";
-import { Button } from "@rmwc/button";
 import styled from "styled-components";
 import QrReader from "react-qr-reader";
 
 export const QRScanner = () => {
   const [result, setResult] = useState(null);
-  const handleScan = data => {
+  const handleScan = (data) => {
     if (data) {
       setResult(data);
     }
   };
 
-  const handleError = err => {
+  const handleError = (err) => {
     console.error(err);
   };
 
